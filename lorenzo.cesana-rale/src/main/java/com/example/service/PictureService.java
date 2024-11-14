@@ -2,31 +2,34 @@ package com.example.service;
 
 import com.example.demo.dto.PictureDto;
 import com.example.demo.model.PictureModel;
+import com.example.demo.repository.PictureRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PictureService {
 
-    private List<PictureModel> pictures = new ArrayList<>();
-    private long currentId = 1;
+    private final PictureRepository pictureRepository;
+
+    @Autowired
+    public PictureService(PictureRepository pictureRepository) {
+        this.pictureRepository = pictureRepository;
+    }
 
     public PictureModel addPicture(PictureDto pictureDto) {
         PictureModel picture = new PictureModel(pictureDto.getTitle(), pictureDto.getPhotographer(), pictureDto.getReleaseDate(), pictureDto.getStatus());
-        picture.setId(currentId++);
-        pictures.add(picture);
-        return picture;
+        return pictureRepository.save(picture);
     }
 
     public List<PictureModel> getAllPictures() {
-        return pictures;
+        return pictureRepository.findAll();
     }
 
     public Optional<PictureModel> getPictureById(Long id) {
-        return pictures.stream().filter(p -> p.getId().equals(id)).findFirst();
+        return pictureRepository.findById(id);
     }
 
     public boolean updatePicture(Long id, PictureDto pictureDto) {
@@ -37,12 +40,13 @@ public class PictureService {
             picture.setPhotographer(pictureDto.getPhotographer());
             picture.setReleaseDate(pictureDto.getReleaseDate());
             picture.setStatus(pictureDto.getStatus());
+            pictureRepository.save(picture);
             return true;
         }
         return false;
     }
 
     public boolean deletePicture(Long id) {
-        return pictures.removeIf(p -> p.getId().equals(id));
+        return pictureRepository.delete(id);
     }
 }
