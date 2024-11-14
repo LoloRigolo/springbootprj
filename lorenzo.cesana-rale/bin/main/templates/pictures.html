@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pictures List</title>
+</head>
+<body>
+    <h1>Pictures List</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Photographer</th>
+                <th>Release Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="picture : ${pictures}">
+                <td th:text="${picture.title}"></td>
+                <td th:text="${picture.photographer}"></td>
+                <td th:text="${picture.releaseDate}"></td>
+                <td th:text="${picture.status}"></td>
+                <td>
+                    <a th:href="@{/pictures/{id}(id=${picture.id})}">View Details</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

@@ -25,13 +25,26 @@ public class PictureRepositoryImpl implements PictureRepository {
 
     @Override
     public PictureModel save(PictureModel pictureModel) {
-        pictureModel.setId(currentId++);
-        pictures.add(pictureModel);
+        if (pictureModel.getId() == null) {
+            pictureModel.setId(currentId++);
+            pictures.add(pictureModel);
+        } else {
+            int index = -1;
+            for (int i = 0; i < pictures.size(); i++) {
+                if (pictures.get(i).getId().equals(pictureModel.getId())) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index != -1) {
+                pictures.set(index, pictureModel);
+            }
+        }
         return pictureModel;
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Long id) {	
         return pictures.removeIf(p -> p.getId().equals(id));
     }
 }
